@@ -73,3 +73,9 @@ tasks.register<JavaExec>("hello_window_clear") {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass.set("learnopengl.a_getting_started.HelloWindowClearKt")
 }
+tasks.register<JavaExec>("hello_triangle") {
+    dependsOn("classes")
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("learnopengl.a_getting_started.HelloTriangleKt")
+}

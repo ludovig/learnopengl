@@ -8,4 +8,5 @@ fun main() {
     println("------------------------\n")
     println("gradlew hello_window")
     println("gradlew hello_window_clear")
+    println("gradlew hello_triangle")
 }
