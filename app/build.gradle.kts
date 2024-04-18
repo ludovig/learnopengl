@@ -43,8 +43,6 @@ dependencies {
     runtimeOnly("org.lwjgl", "lwjgl-remotery", classifier = lwjglNatives)
     runtimeOnly("org.lwjgl", "lwjgl-stb", classifier = lwjglNatives)
 
-    implementation("kotlin.graphics:uno:0.7.21")
-
     // This dependency is used by the application.
     implementation(libs.guava)
 }
@@ -78,4 +76,10 @@ tasks.register<JavaExec>("hello_triangle") {
     javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
     classpath = sourceSets["main"].runtimeClasspath
     mainClass.set("learnopengl.a_getting_started.HelloTriangleKt")
+}
+tasks.register<JavaExec>("hello_triangle_indexed") {
+    dependsOn("classes")
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("learnopengl.a_getting_started.HelloTriangleIndexedKt")
 }

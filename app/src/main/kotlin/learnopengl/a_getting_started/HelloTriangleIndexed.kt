@@ -9,12 +9,12 @@ import org.lwjgl.opengl.GL30C.*
 import org.lwjgl.system.MemoryUtil.NULL
 
 fun main() {
-    with(HelloTriangle()) {
+    with(HelloTriangleIndexed()) {
         main()
     }
 }
 
-open class HelloTriangle {
+open class HelloTriangleIndexed {
 
     // settings
     companion object {
@@ -100,14 +100,21 @@ open class HelloTriangle {
         glDeleteShader(fragmentShader)
 
         val vertices = floatArrayOf(
-            -0.5f, -0.5f, 0f, // left
-             0.5f, -0.5f, 0f, // right
-             0.0f,  0.5f, 0f  // top
+             0.5f,  0.5f, 0f, // top right
+             0.5f, -0.5f, 0f, // bottom right
+            -0.5f, -0.5f, 0f, // bottom left
+            -0.5f,  0.5f, 0f  // top left
+        )
+        val indices = intArrayOf( // note that we start from 0!
+            0, 1, 3, // first Triangle
+            1, 2, 3  // second Triangle
         )
         val vao = createIntBuffer(1)
         val vbo = createIntBuffer(1)
+        val ebo = createIntBuffer(1)
         glGenVertexArrays(vao)
         glGenBuffers(vbo)
+        glGenBuffers(ebo)
 
         // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
         glBindVertexArray(vao.get(0))
@@ -115,15 +122,24 @@ open class HelloTriangle {
         glBindBuffer(GL_ARRAY_BUFFER, vbo.get(0))
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW)
 
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo.get(0))
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW)
+
         glVertexAttribPointer(0, Vec3.length, GL_FLOAT, false, Vec3.size, 0)
         glEnableVertexAttribArray(0)
 
         // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterward we can safely unbind
         glBindBuffer(GL_ARRAY_BUFFER, 0)
 
+        // remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
         // You can unbind the VAO afterward so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
         // VAOs requires a call to glBindVertexArray anyway, so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
         glBindVertexArray(0)
+
+        // uncomment this call to draw in wireframe polygons.
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         // render loop
         // -----------
@@ -140,7 +156,7 @@ open class HelloTriangle {
             // draw our first triangle
             glUseProgram(shaderProgram)
             glBindVertexArray(vao.get(0)) // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-            glDrawArrays(GL_TRIANGLES, 0, 3)
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0)
             // glBindVertexArray(0) // no need to unbind it every time
 
             // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -153,6 +169,7 @@ open class HelloTriangle {
         // ------------------------------------------------------------------------
         glDeleteVertexArrays(vao)
         glDeleteBuffers(vbo)
+        glDeleteBuffers(ebo)
         glDeleteProgram(shaderProgram)
 
         // glfw: terminate, clearing all previously allocated GLFW resources.
