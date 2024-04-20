@@ -10,3 +10,4 @@ Status:
   - [x] 1.2 Hello Window Clear
   - [x] 2.1 Hello Triangle
   - [x] 2.2 Hello Triangle Indexed
+  - [x] 3.1 Shaders Uniform

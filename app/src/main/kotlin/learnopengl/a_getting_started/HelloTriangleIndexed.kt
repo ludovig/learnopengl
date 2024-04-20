@@ -99,6 +99,8 @@ open class HelloTriangleIndexed {
         glDeleteShader(vertexShader)
         glDeleteShader(fragmentShader)
 
+        // set up vertex data (and buffer(s)) and configure vertex attributes
+        // ------------------------------------------------------------------
         val vertices = floatArrayOf(
              0.5f,  0.5f, 0f, // top right
              0.5f, -0.5f, 0f, // bottom right
@@ -109,13 +111,13 @@ open class HelloTriangleIndexed {
             0, 1, 3, // first Triangle
             1, 2, 3  // second Triangle
         )
+
         val vao = createIntBuffer(1)
         val vbo = createIntBuffer(1)
         val ebo = createIntBuffer(1)
         glGenVertexArrays(vao)
         glGenBuffers(vbo)
         glGenBuffers(ebo)
-
         // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
         glBindVertexArray(vao.get(0))
 

@@ -7,14 +7,15 @@ import org.lwjgl.glfw.GLFWFramebufferSizeCallback
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL30C.*
 import org.lwjgl.system.MemoryUtil.NULL
+import kotlin.math.sin
 
 fun main() {
-    with(HelloTriangle()) {
+    with(ShadersUniform()) {
         main()
     }
 }
 
-open class HelloTriangle {
+open class ShadersUniform {
 
     // settings
     companion object {
@@ -34,9 +35,11 @@ open class HelloTriangle {
             #version 330 core
             out vec4 FragColor;
 
+            uniform vec4 ourColor; // we set this variable in the OpenGL code
+
             void main()
             {
-                FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+                FragColor = ourColor;
             }
         """
     }
@@ -125,7 +128,11 @@ open class HelloTriangle {
 
         // You can unbind the VAO afterward so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
         // VAOs requires a call to glBindVertexArray anyway, so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-        glBindVertexArray(0)
+        //glBindVertexArray(0)
+
+        // bind the VAO (it was already bound, but just to demonstrate): seeing as we only have a single VAO we can
+        // just bind it beforehand before rendering the respective triangle; this is another approach.
+        glBindVertexArray(vao.get(0))
 
         // render loop
         // -----------
@@ -139,11 +146,17 @@ open class HelloTriangle {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
             glClear(GL_COLOR_BUFFER_BIT)
 
-            // draw our first triangle
+            // be sure to activate the shader
             glUseProgram(shaderProgram)
-            glBindVertexArray(vao.get(0)) // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+
+            // update the uniform color
+            val timeValue = glfwGetTime()
+            val greenValue = ((sin(timeValue) / 2.0f) + 0.5f).toFloat()
+            val vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor")
+            glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f)
+
+            // now render the triangle
             glDrawArrays(GL_TRIANGLES, 0, 3)
-            // glBindVertexArray(0) // no need to unbind it every time
 
             // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
             // -------------------------------------------------------------------------------

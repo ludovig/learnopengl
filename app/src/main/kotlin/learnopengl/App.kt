@@ -10,4 +10,5 @@ fun main() {
     println("gradlew hello_window_clear")
     println("gradlew hello_triangle")
     println("gradlew hello_triangle_indexed")
+    println("gradlew shaders_uniform")
 }
