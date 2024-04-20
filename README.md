@@ -11,3 +11,4 @@ Status:
   - [x] 2.1 Hello Triangle
   - [x] 2.2 Hello Triangle Indexed
   - [x] 3.1 Shaders Uniform
+  - [x] 3.2 Shaders Interpolation
