@@ -14,7 +14,7 @@ fun main() {
     }
 }
 
-open class HelloTriangle {
+class HelloTriangle {
 
     // settings
     companion object {

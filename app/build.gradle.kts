@@ -95,3 +95,9 @@ tasks.register<JavaExec>("shaders_interpolation") {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass.set("learnopengl.a_getting_started.ShadersInterpolationKt")
 }
+tasks.register<JavaExec>("shaders_class") {
+    dependsOn("classes")
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("learnopengl.a_getting_started.ShadersClassKt")
+}

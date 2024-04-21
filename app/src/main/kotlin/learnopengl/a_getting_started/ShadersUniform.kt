@@ -15,7 +15,7 @@ fun main() {
     }
 }
 
-open class ShadersUniform {
+class ShadersUniform {
 
     // settings
     companion object {

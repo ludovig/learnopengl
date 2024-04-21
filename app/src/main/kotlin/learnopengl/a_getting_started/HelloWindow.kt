@@ -12,7 +12,7 @@ fun main() {
     }
 }
 
-open class HelloWindow {
+class HelloWindow {
 
     // settings
     companion object {

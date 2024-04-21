@@ -7,7 +7,6 @@ import org.lwjgl.glfw.GLFWFramebufferSizeCallback
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL30C.*
 import org.lwjgl.system.MemoryUtil.NULL
-import kotlin.math.sin
 
 fun main() {
     with(ShadersInterpolation()) {
@@ -15,7 +14,7 @@ fun main() {
     }
 }
 
-open class ShadersInterpolation {
+class ShadersInterpolation {
 
     // settings
     companion object {
