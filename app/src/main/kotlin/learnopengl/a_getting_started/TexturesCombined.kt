@@ -11,14 +11,15 @@ import org.lwjgl.system.MemoryUtil.NULL
 import learnopengl.Shader
 import learnopengl.toBuffer
 import learnopengl.Image
+import org.lwjgl.opengl.EXTABGR
 
 fun main() {
-    with(Textures()) {
+    with(TexturesCombined()) {
         main()
     }
 }
 
-class Textures {
+class TexturesCombined {
 
     // settings
     companion object {
@@ -53,18 +54,18 @@ class Textures {
         // build and compile our shader program
         // ------------------------------------
         val ourShader = Shader(
-            "/shaders/a_getting_started/textures/textures.vert",
-            "/shaders/a_getting_started/textures/textures.frag",
+            "/shaders/a_getting_started/textures_combined/textures.vert",
+            "/shaders/a_getting_started/textures_combined/textures.frag",
         )
 
         // set up vertex data (and buffer(s)) and configure vertex attributes
         // ------------------------------------------------------------------
         val vertices = floatArrayOf(
             // positions          // colors           // texture coords
-             0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-             0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-            -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-            -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left
+             0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 0.0f, // top right
+             0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f, // bottom right
+            -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f, // bottom left
+            -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 0.0f  // top left
         )
         val indices = intArrayOf( // note that we start from 0!
             0, 1, 3, // first Triangle
@@ -99,9 +100,12 @@ class Textures {
 
         // load and create a texture
         // -------------------------
-        val texture = createIntBuffer(1)
-        glGenTextures(texture)
-        glBindTexture(GL_TEXTURE_2D, texture.get(0)) // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+        val texture1 = createIntBuffer(1)
+        val texture2 = createIntBuffer(1)
+        // texture 1
+        // ---------
+        glGenTextures(texture1)
+        glBindTexture(GL_TEXTURE_2D, texture1.get(0)) // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
         // set the texture wrapping parameters
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)	// set texture wrapping to GL_REPEAT (default wrapping method)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
@@ -109,21 +113,55 @@ class Textures {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
 
-        val image = Image("textures/container.jpg").readImage()
+        val image1 = Image("textures/container.jpg").readImage()
 
         // ByteBuffered images used BGR instead of RGB
         glTexImage2D(
             GL_TEXTURE_2D,
             0,
             GL_RGB,
-            image.width,
-            image.height,
+            image1.width,
+            image1.height,
             0,
             GL_BGR,
             GL_UNSIGNED_BYTE,
-            image.toBuffer()
+            image1.toBuffer()
         )
         glGenerateMipmap(GL_TEXTURE_2D)
+        // texture 2
+        // ---------
+        glGenTextures(texture2)
+        glBindTexture(GL_TEXTURE_2D, texture2.get(0)) // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+        // set the texture wrapping parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)	// set texture wrapping to GL_REPEAT (default wrapping method)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+        // set texture filtering parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+
+        val image2 = Image("textures/awesomeface.png").readImage()
+
+        // ByteBuffered images used BRGA instead RGBA
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            GL_RGB,
+            image2.width,
+            image2.height,
+            0,
+            EXTABGR.GL_ABGR_EXT,
+            GL_UNSIGNED_BYTE,
+            image2.toBuffer()
+        )
+        glGenerateMipmap(GL_TEXTURE_2D)
+
+        // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
+        // -------------------------------------------------------------------------------------------
+        ourShader.use() // don't forget to activate/use the shader before setting uniforms!
+        // either set it manually like so:
+        glUniform1i(glGetUniformLocation(ourShader.id, "texture1"), 0)
+        // or set it via the texture class
+        ourShader.setInt("texture2", 1)
 
         // render loop
         // -----------
@@ -137,8 +175,11 @@ class Textures {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
             glClear(GL_COLOR_BUFFER_BIT)
 
-            // bind texture
-            glBindTexture(GL_TEXTURE_2D, texture.get(0))
+            // bind textures on corresponding texture units
+            glActiveTexture(GL_TEXTURE0)
+            glBindTexture(GL_TEXTURE_2D, texture1.get(0))
+            glActiveTexture(GL_TEXTURE1)
+            glBindTexture(GL_TEXTURE_2D, texture2.get(0))
 
             // be sure to activate the shader
             ourShader.use()

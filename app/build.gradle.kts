@@ -107,3 +107,9 @@ tasks.register<JavaExec>("textures") {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass.set("learnopengl.a_getting_started.TexturesKt")
 }
+tasks.register<JavaExec>("textures_combined") {
+    dependsOn("classes")
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("learnopengl.a_getting_started.TexturesCombinedKt")
+}
