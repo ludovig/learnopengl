@@ -13,3 +13,4 @@ Status:
   - [x] 3.1 Shaders Uniform
   - [x] 3.2 Shaders Interpolation
   - [x] 3.3 Shaders Class
+  - [x] 4.1 Textures

@@ -101,3 +101,9 @@ tasks.register<JavaExec>("shaders_class") {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass.set("learnopengl.a_getting_started.ShadersClassKt")
 }
+tasks.register<JavaExec>("textures") {
+    dependsOn("classes")
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("learnopengl.a_getting_started.TexturesKt")
+}
