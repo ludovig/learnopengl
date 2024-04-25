@@ -24,4 +24,5 @@ fun main() {
     println("\nCoordinate Systems")
     println("--------")
     println("gradlew coordinate_systems")
+    println("gradlew coordinate_systems_depth")
 }
