@@ -21,4 +21,7 @@ fun main() {
     println("\nTextures")
     println("--------")
     println("gradlew textures")
+    println("\nCoordinate Systems")
+    println("--------")
+    println("gradlew coordinate_systems")
 }

@@ -119,3 +119,9 @@ tasks.register<JavaExec>("transformations") {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass.set("learnopengl.a_getting_started.TransformationsKt")
 }
+tasks.register<JavaExec>("coordinate_systems") {
+    dependsOn("classes")
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("learnopengl.a_getting_started.CoordinateSystemsKt")
+}

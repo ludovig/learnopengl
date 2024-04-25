@@ -2,6 +2,7 @@ package learnopengl
 
 import org.lwjgl.opengl.GL30C.*
 import kotlin.system.exitProcess
+import glm_.mat4x4.Mat4
 
 class Shader(
     vertexPath: String,
@@ -64,6 +65,11 @@ class Shader(
     fun setFloat(name: String, value: Float)
     {
         glUniform1f(glGetUniformLocation(id, name), value)
+    }
+    // ------------------------------------------------------------------------
+    fun setMat4(name: String, value: Mat4)
+    {
+        glUniformMatrix4fv(glGetUniformLocation(id, name),  false, value.toFloatArray())
     }
 
     // utility function for checking shader compilation/linking errors.
