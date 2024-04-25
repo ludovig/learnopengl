@@ -131,3 +131,9 @@ tasks.register<JavaExec>("coordinate_systems_depth") {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass.set("learnopengl.a_getting_started.CoordinateSystemsDepthKt")
 }
+tasks.register<JavaExec>("coordinate_systems_multiple") {
+    dependsOn("classes")
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("learnopengl.a_getting_started.CoordinateSystemsMultipleKt")
+}
