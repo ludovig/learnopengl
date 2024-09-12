@@ -31,4 +31,7 @@ fun main() {
     println("\tgradlew coordinate_systems")
     println("\tgradlew coordinate_systems_depth")
     println("\tgradlew coordinate_systems_multiple")
+    println("\n\t7. Camera")
+    println("\t---------------------")
+    println("\tgradlew camera_circle")
 }

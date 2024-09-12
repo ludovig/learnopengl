@@ -137,3 +137,9 @@ tasks.register<JavaExec>("coordinate_systems_multiple") {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass.set("learnopengl.a_getting_started.CoordinateSystemsMultipleKt")
 }
+tasks.register<JavaExec>("camera_circle") {
+    dependsOn("classes")
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("learnopengl.a_getting_started.CameraCircleKt")
+}
