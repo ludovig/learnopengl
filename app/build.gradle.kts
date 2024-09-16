@@ -143,3 +143,9 @@ tasks.register<JavaExec>("camera_circle") {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass.set("learnopengl.a_getting_started.CameraCircleKt")
 }
+tasks.register<JavaExec>("camera_keyboard_dt") {
+    dependsOn("classes")
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("learnopengl.a_getting_started.CameraKeyboardDtKt")
+}

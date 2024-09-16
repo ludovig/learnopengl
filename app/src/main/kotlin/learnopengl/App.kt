@@ -34,4 +34,5 @@ fun main() {
     println("\n\t7. Camera")
     println("\t---------------------")
     println("\tgradlew camera_circle")
+    println("\tgradlew camera_keyboard_dt")
 }

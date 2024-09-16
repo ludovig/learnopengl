@@ -20,3 +20,4 @@ Status:
   - [x] 6.2 Coordinate Systems Depth
   - [x] 6.3 Coordinate Systems Multiple
   - [x] 7.1 Camera Circle
+  - [x] 7.2 Camera Keyboard Dt
