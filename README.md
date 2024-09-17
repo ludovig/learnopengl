@@ -21,3 +21,4 @@ Status:
   - [x] 6.3 Coordinate Systems Multiple
   - [x] 7.1 Camera Circle
   - [x] 7.2 Camera Keyboard Dt
+  - [x] 7.3 Camera Mouse Zoom
