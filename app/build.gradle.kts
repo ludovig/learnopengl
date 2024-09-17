@@ -155,3 +155,9 @@ tasks.register<JavaExec>("camera_mouse_zoom") {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass.set("learnopengl.a_getting_started.CameraMouseZoomKt")
 }
+tasks.register<JavaExec>("camera_class") {
+    dependsOn("classes")
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("learnopengl.a_getting_started.CameraClassKt")
+}

@@ -35,4 +35,5 @@ fun main() {
     println("\t---------------------")
     println("\tgradlew camera_circle")
     println("\tgradlew camera_keyboard_dt")
+    println("\tgradlew camera_class")
 }

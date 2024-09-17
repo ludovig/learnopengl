@@ -22,3 +22,4 @@ Status:
   - [x] 7.1 Camera Circle
   - [x] 7.2 Camera Keyboard Dt
   - [x] 7.3 Camera Mouse Zoom
+  - [x] 7.4 Camera Class
