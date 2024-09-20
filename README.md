@@ -3,6 +3,10 @@ Kotlin Port of Joey De Vries OpenGL tutorials (https://learnopengl.com)
 
 Original repository in C++ at https://github.com/JoeyDeVries/LearnOpenGL
 
+Some insights taken
+- from another tutorial kotlin port by https://github.com/jvm-graphics-labs/learn-OpenGL
+- from examples by https://github.com/matteo-pacini/LWJGL-Kotlin-Example
+
 Status:
 
 - [x] 1. Getting Started
@@ -23,3 +27,5 @@ Status:
   - [x] 7.2 Camera Keyboard Dt
   - [x] 7.3 Camera Mouse Zoom
   - [x] 7.4 Camera Class
+- [ ] 2. Lighting
+  - [x] 2.1 Colors

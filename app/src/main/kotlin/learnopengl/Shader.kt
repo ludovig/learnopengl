@@ -3,6 +3,7 @@ package learnopengl
 import org.lwjgl.opengl.GL30C.*
 import kotlin.system.exitProcess
 import glm_.mat4x4.Mat4
+import glm_.vec3.Vec3
 
 class Shader(
     vertexPath: String,
@@ -65,6 +66,11 @@ class Shader(
     fun setFloat(name: String, value: Float)
     {
         glUniform1f(glGetUniformLocation(id, name), value)
+    }
+    // ------------------------------------------------------------------------
+    fun setVec3(name: String, value: Vec3)
+    {
+        glUniform3fv(glGetUniformLocation(id, name), value.toFloatArray())
     }
     // ------------------------------------------------------------------------
     fun setMat4(name: String, value: Mat4)

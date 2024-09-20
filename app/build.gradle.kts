@@ -161,3 +161,9 @@ tasks.register<JavaExec>("camera_class") {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass.set("learnopengl.a_getting_started.CameraClassKt")
 }
+tasks.register<JavaExec>("colors") {
+    dependsOn("classes")
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("learnopengl.lighting.ColorsKt")
+}

@@ -36,4 +36,10 @@ fun main() {
     println("\tgradlew camera_circle")
     println("\tgradlew camera_keyboard_dt")
     println("\tgradlew camera_class")
+    println("------------------------")
+    println("\nLighting")
+    println("\n\t1. Colors")
+    println("\t---------------------")
+    println("\tgradlew colors")
+    println("------------------------")
 }

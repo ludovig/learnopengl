@@ -1,8 +1,7 @@
-package learnopengl.a_getting_started
+package learnopengl.lighting
 
 import glm_.mat4x4.Mat4
 import glm_.vec3.Vec3
-import glm_.vec2.Vec2
 import glm_.func.toRadians
 import glm_.glm
 import org.lwjgl.BufferUtils.createIntBuffer
@@ -14,19 +13,16 @@ import org.lwjgl.opengl.GL30C.*
 import org.lwjgl.opengl.GL
 import org.lwjgl.system.MemoryUtil.NULL
 import learnopengl.Shader
-import learnopengl.toBuffer
-import learnopengl.Image
 import learnopengl.Camera
 import learnopengl.CameraMovement.*
-import org.lwjgl.opengl.EXTABGR
 
 fun main() {
-    with(CameraClass()) {
+    with(Colors()) {
         main()
     }
 }
 
-class CameraClass {
+class Colors {
 
     // settings
     companion object {
@@ -44,6 +40,9 @@ class CameraClass {
     // timing
     private var deltaTime = 0.0f // Time between current frame and last frame
     private var lastFrame = 0.0f // Time of last frame/
+
+    // lighting
+    private val lightPos = Vec3(1.2f, 1.0f, 2.0f)
 
     fun main() {
         // glfw: initialize and configure
@@ -79,165 +78,86 @@ class CameraClass {
 
         // build and compile our shader program
         // ------------------------------------
-        val ourShader = Shader(
-            "/shaders/a_getting_started/camera/camera.vert",
-            "/shaders/a_getting_started/camera/camera.frag",
+        val lightingShader = Shader(
+            "/shaders/lighting/colors/colors.vert",
+            "/shaders/lighting/colors/colors.frag",
+        )
+        val lightCubeShader = Shader(
+            "/shaders/lighting/colors/light_cube.vert",
+            "/shaders/lighting/colors/light_cube.frag",
         )
 
         // set up vertex data (and buffer(s)) and configure vertex attributes
         // ------------------------------------------------------------------
         val vertices = floatArrayOf(
-            -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-            0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-            0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-            0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-            -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f, 
+             0.5f, -0.5f, -0.5f,  
+             0.5f,  0.5f, -0.5f,  
+             0.5f,  0.5f, -0.5f,  
+            -0.5f,  0.5f, -0.5f, 
+            -0.5f, -0.5f, -0.5f, 
 
-            -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-            0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-            0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-            0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-            -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
-            -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+            -0.5f, -0.5f,  0.5f, 
+             0.5f, -0.5f,  0.5f,  
+             0.5f,  0.5f,  0.5f,  
+             0.5f,  0.5f,  0.5f,  
+            -0.5f,  0.5f,  0.5f, 
+            -0.5f, -0.5f,  0.5f, 
 
-            -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-            -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-            -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-            -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f, 
+            -0.5f,  0.5f, -0.5f, 
+            -0.5f, -0.5f, -0.5f, 
+            -0.5f, -0.5f, -0.5f, 
+            -0.5f, -0.5f,  0.5f, 
+            -0.5f,  0.5f,  0.5f, 
 
-            0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-            0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-            0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-            0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-            0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-            0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+             0.5f,  0.5f,  0.5f,  
+             0.5f,  0.5f, -0.5f,  
+             0.5f, -0.5f, -0.5f,  
+             0.5f, -0.5f, -0.5f,  
+             0.5f, -0.5f,  0.5f,  
+             0.5f,  0.5f,  0.5f,  
 
-            -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-            0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
-            0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-            0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-            -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-            -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f, 
+             0.5f, -0.5f, -0.5f,  
+             0.5f, -0.5f,  0.5f,  
+             0.5f, -0.5f,  0.5f,  
+            -0.5f, -0.5f,  0.5f, 
+            -0.5f, -0.5f, -0.5f, 
 
-            -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-            0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-            0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-            0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-            -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
-            -0.5f, 0.5f, -0.5f, 0.0f, 1.0f
+            -0.5f,  0.5f, -0.5f, 
+             0.5f,  0.5f, -0.5f,  
+             0.5f,  0.5f,  0.5f,  
+             0.5f,  0.5f,  0.5f,  
+            -0.5f,  0.5f,  0.5f, 
+            -0.5f,  0.5f, -0.5f, 
         )
 
-        // world space positions of our cubes
-        val cubePositions = arrayOf(
-            Vec3(0f, 0f, 0f),
-            Vec3(2f, 5f, -15f),
-            Vec3(-1.5f, -2.2f, -2.5f),
-            Vec3(-3.8f, -2f, -12.3f),
-            Vec3(2.4f, -0.4f, -3.5f),
-            Vec3(-1.7f, 3f, -7.5f),
-            Vec3(1.3f, -2f, -2.5f),
-            Vec3(1.5f, 2f, -2.5f),
-            Vec3(1.5f, 0.2f, -1.5f),
-            Vec3(-1.3f, 1f, -1.5f)
-        )
-
-        val vao = createIntBuffer(1)
+        val cubeVAO = createIntBuffer(1)
         val vbo = createIntBuffer(1)
 
-        glGenVertexArrays(vao)
+        glGenVertexArrays(cubeVAO)
         glGenBuffers(vbo)
 
-        glBindVertexArray(vao.get(0))
+        glBindVertexArray(cubeVAO.get(0))
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo.get(0))
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW)
 
         // position attribute
-        glVertexAttribPointer(0, Vec3.length, GL_FLOAT, false, Vec3.size + Vec2.size, 0)
+        glVertexAttribPointer(0, Vec3.length, GL_FLOAT, false, Vec3.size, 0)
         glEnableVertexAttribArray(0)
-        // texture attribute
-        glVertexAttribPointer(1, Vec2.length, GL_FLOAT, false, Vec3.size + Vec2.size, Vec3.size.toLong())
-        glEnableVertexAttribArray(1)
 
-        // load and create a texture
-        // -------------------------
-        val texture1 = createIntBuffer(1)
-        val texture2 = createIntBuffer(1)
-        // texture 1
-        // ---------
-        glGenTextures(texture1)
-        glBindTexture(
-            GL_TEXTURE_2D,
-            texture1.get(0)
-        ) // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
-        // set the texture wrapping parameters
-        glTexParameteri(
-            GL_TEXTURE_2D,
-            GL_TEXTURE_WRAP_S,
-            GL_REPEAT
-        )    // set texture wrapping to GL_REPEAT (default wrapping method)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
-        // set texture filtering parameters
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        // second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
+        val lightVAO = createIntBuffer(1)
 
-        val image1 = Image("textures/container.jpg").readImage()
-
-        // ByteBuffered images used BGR instead of RGB
-        glTexImage2D(
-            GL_TEXTURE_2D,
-            0,
-            GL_RGB,
-            image1.width,
-            image1.height,
-            0,
-            GL_BGR,
-            GL_UNSIGNED_BYTE,
-            image1.toBuffer()
-        )
-        glGenerateMipmap(GL_TEXTURE_2D)
-        // texture 2
-        // ---------
-        glGenTextures(texture2)
-        glBindTexture(
-            GL_TEXTURE_2D,
-            texture2.get(0)
-        ) // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
-        // set the texture wrapping parameters
-        glTexParameteri(
-            GL_TEXTURE_2D,
-            GL_TEXTURE_WRAP_S,
-            GL_REPEAT
-        )    // set texture wrapping to GL_REPEAT (default wrapping method)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
-        // set texture filtering parameters
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-
-        val image2 = Image("textures/awesomeface.png").readImage()
-
-        // ByteBuffered images used BRGA instead RGBA
-        glTexImage2D(
-            GL_TEXTURE_2D,
-            0,
-            GL_RGB,
-            image2.width,
-            image2.height,
-            0,
-            EXTABGR.GL_ABGR_EXT,
-            GL_UNSIGNED_BYTE,
-            image2.toBuffer()
-        )
-        glGenerateMipmap(GL_TEXTURE_2D)
-
-        // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
-        // -------------------------------------------------------------------------------------------
-        ourShader.use() // don't forget to activate/use the shader before setting uniforms!
-        ourShader.setInt("texture1", 0)
-        ourShader.setInt("texture2", 1)
+        glGenVertexArrays(lightVAO)
+        glBindVertexArray(lightVAO.get(0))
+        // we only need to bind to the VBO, the container's VBO's data already contains the data.
+        glBindBuffer(GL_ARRAY_BUFFER, vbo.get(0))
+        // set the vertex attribute
+        glVertexAttribPointer(0, Vec3.length, GL_FLOAT, false, Vec3.size, 0)
+        glEnableVertexAttribArray(0)
 
         // render loop
         // -----------
@@ -257,37 +177,38 @@ class CameraClass {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
             glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT) // also clear the depth buffer now!
 
-            // bind textures on corresponding texture units
-            glActiveTexture(GL_TEXTURE0)
-            glBindTexture(GL_TEXTURE_2D, texture1.get(0))
-            glActiveTexture(GL_TEXTURE1)
-            glBindTexture(GL_TEXTURE_2D, texture2.get(0))
+            // don't forget to use the corresponding shader program first (to set the uniform)
+            lightingShader.use()
+            lightingShader.setVec3("objectColor", Vec3(1.0f, 0.5f, 0.31f))
+            lightingShader.setVec3("lightColor",  Vec3(1.0f, 1.0f, 1.0f))
 
-            // activate shader
-            ourShader.use()
-
-            // pass projection matrix to shader (note that in this case it could change every frame)
+            // view/projection transformations
             val projection =
                 glm.perspective(toRadians(camera.zoom), WINDOW_SIZE.first.toFloat() / WINDOW_SIZE.second.toFloat(), 0.1f, 100.0f)
-            ourShader.setMat4("projection", projection)
-
-            // camera / view transformation
             val view = camera.getViewMatrix()
-            ourShader.setMat4("view", view)
+            lightingShader.setMat4("projection", projection)
+            lightingShader.setMat4("view", view)
 
-            // render boxes
-            glBindVertexArray(vao.get(0))
-            for ((i, translation) in cubePositions.withIndex()) {
-                val angle = toRadians(20f * i)
-                val model = Mat4()
-                    .translate(translation)
-                    .rotate(angle, Vec3(1.0f, 0.3f, 0.5f))
+            // world transformation
+            var model = Mat4()
+            lightingShader.setMat4("model", model)
 
-                ourShader.setMat4("model", model)
+            // render the cube
+            glBindVertexArray(cubeVAO.get(0))
+            glDrawArrays(GL_TRIANGLES, 0, 36)
 
-                glDrawArrays(GL_TRIANGLES, 0, 36)
-            }
+            // also draw the lamp object
+            lightCubeShader.use()
+            lightCubeShader.setMat4("projection", projection)
+            lightCubeShader.setMat4("view", view)
+            model = Mat4()
+                .translate(lightPos)
+                .scale(Vec3(0.2f)) // a smaller cube
+            lightCubeShader.setMat4("model", model)
 
+            // draw the light cube object
+            glBindVertexArray(lightVAO.get(0))
+            glDrawArrays(GL_TRIANGLES, 0, 36)
 
             // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
             // -------------------------------------------------------------------------------
@@ -297,7 +218,7 @@ class CameraClass {
 
         // optional: de-allocate all resources once they've outlived their purpose:
         // ------------------------------------------------------------------------
-        glDeleteVertexArrays(vao)
+        glDeleteVertexArrays(cubeVAO)
         glDeleteBuffers(vbo)
 
         // glfw: terminate, clearing all previously allocated GLFW resources.

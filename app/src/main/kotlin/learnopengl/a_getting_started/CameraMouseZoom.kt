@@ -89,8 +89,8 @@ class CameraMouseZoom {
         // build and compile our shader program
         // ------------------------------------
         val ourShader = Shader(
-            "/shaders/a_getting_started/coordinate_systems_multiple/coordinate_systems_multiple.vert",
-            "/shaders/a_getting_started/coordinate_systems_multiple/coordinate_systems_multiple.frag",
+            "/shaders/a_getting_started/camera/camera.vert",
+            "/shaders/a_getting_started/camera/camera.frag",
         )
 
         // set up vertex data (and buffer(s)) and configure vertex attributes
