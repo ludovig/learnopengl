@@ -167,3 +167,9 @@ tasks.register<JavaExec>("colors") {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass.set("learnopengl.lighting.ColorsKt")
 }
+tasks.register<JavaExec>("basic_lighting_diffuse") {
+    dependsOn("classes")
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("learnopengl.lighting.BasicLightingDiffuseKt")
+}

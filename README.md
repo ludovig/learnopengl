@@ -3,9 +3,9 @@ Kotlin Port of Joey De Vries OpenGL tutorials (https://learnopengl.com)
 
 Original repository in C++ at https://github.com/JoeyDeVries/LearnOpenGL
 
-Some insights taken
-- from another tutorial kotlin port by https://github.com/jvm-graphics-labs/learn-OpenGL
-- from examples by https://github.com/matteo-pacini/LWJGL-Kotlin-Example
+Some insights taken from
+- another tutorial kotlin port by https://github.com/jvm-graphics-labs/learn-OpenGL
+- examples by https://github.com/matteo-pacini/LWJGL-Kotlin-Example
 
 Status:
 
